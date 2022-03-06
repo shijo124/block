@@ -3,12 +3,12 @@
 function get_test(){
     fetch("https://13.231.123.210/",
         {
-            headers: {
-                "Content-Type": "application/json",
-            },
+            //headers: {
+            //    "Content-Type": "application/json",
+            //},
             method: "GET",
             mode: "cors",
-            credentials: "include",
+            //credentials: "include",
         }
     )
     .then((res) => {
