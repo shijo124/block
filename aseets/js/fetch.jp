@@ -1,14 +1,20 @@
 "use strict";
 
 function get_test(){
+    let body = {
+        email: "at.shijo@opt-incubate.com",
+        pass: "12345",
+    };
+
     fetch("https://13.231.123.210/",
         {
-            //headers: {
-            //    "Content-Type": "application/json",
-            //},
-            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
             mode: "cors",
             //credentials: "include",
+            body: JSON.stringify(body),
         }
     )
     .then((res) => {
@@ -16,7 +22,18 @@ function get_test(){
         return res.json();
     })
     .then((json) => {
-        console.log(json);
+        console.log(typeof json);
+        if(json.res_flag === false ){
+            location.href = "https://localhost/wallet.html";
+        }
+        else{
+            console.log(json.res_flag);
+            console.log(json.message);
+            console.log(json.user.Id);
+            console.log(json.user.Name);
+            console.log(json.user.Email);
+            console.log(json.user.Pass);
+        }
     });
 }
 
