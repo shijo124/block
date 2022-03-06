@@ -1,0 +1,22 @@
+"use strict";
+
+function get_test(){
+    fetch("https://13.231.123.210/",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "GET",
+            mode: "no-cors",
+            credentials: "include",
+        }
+    )
+    .then((res) => {
+        console.log(res);
+        return res.json();
+    })
+    .then((json) => {
+        console.log(json);
+    });
+}
+
