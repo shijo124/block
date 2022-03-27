@@ -8,7 +8,7 @@ function get_test(){
         pass: document.getElementById("pass").value,
     };
 
-    fetch("https://13.231.123.210/login",
+    fetch("https://dix.api.hello-oi.com/login",
         {
             headers: {
                 "Content-Type": "application/json",
