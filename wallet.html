@@ -18,15 +18,21 @@
 
                     <p class="fs-3">dixコインを買う</p>
                     <div class="form-floating">
-                        <input type="tel" class="form-control bg-dark text-white" id="floatingPassword" placeholder="dix coin">
-                        <label for="floatingPassword">dix coin buy</label>
+                        <input type="tel" class="form-control bg-dark text-white" id="floatingDixBuy" placeholder="dix coin">
+                        <label for="floatingDixBuy">dix coin buy</label>
                     </div>
                     <button class="w-100 btn btn-lg btn-primary" type="submit">購入</button>
 
                     <p class="mt-5 fs-3">dixコインを送金する</p>
                     <div class="form-floating">
-                        <input type="tel" class="form-control bg-dark text-white" id="floatingPassword" placeholder="dix coin send">
-                        <label for="floatingPassword">dix coin send</label>
+                        <select class="" name="target_member" id="floatingDixTarget">
+                            <option value="1">まるし</option>
+                        </select>
+                        <label for="floatingDixTarget">dix coin target</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="tel" class="form-control bg-dark text-white" id="floatingDixSending" placeholder="dix coin send">
+                        <label for="floatingDixSending">dix coin send</label>
                     </div>
                     <button class="w-100 btn btn-lg btn-success" type="submit">送金</button>
                 </form>
