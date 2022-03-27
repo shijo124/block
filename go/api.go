@@ -2,11 +2,15 @@ package main
 
 import (
     "github.com/gin-contrib/cors"
+    _ "github.com/gin-contrib/sessions"
+    _ "github.com/gin-contrib/sessions/cookie"
     "github.com/gin-gonic/gin"
-    _ "net/http"
+    "net/http"
     _ "encoding/json"
     "fmt"
     "time"
+    "strconv"  // キャスト
+    "reflect"  // 型確認
     _ "github.com/jinzhu/gorm"    //v1.0
     _ "github.com/jinzhu/gorm/dialects/mysql" // v1.0
     "gorm.io/gorm"
@@ -15,7 +19,7 @@ import (
 )
 
 type ComModel struct {
-    ID int64 `gorm:"primaryKey"`
+    ID uint64 `gorm:"primaryKey"`  // MAX:18446744073709551615
     CreatedAt time.Time
     UpdatedAt time.Time
     DeletedAt gorm.DeletedAt `gorm:"index"`
@@ -105,11 +109,13 @@ func main(){
 
     config := cors.DefaultConfig()
     config.AllowOrigins = []string{"https://localhost",}    // アクセスを許可したいアクセス元
-    config.AllowMethods = []string{"GET","POST",}            // アクセスを許可したいHTTPメソッド
-    config.AllowCredentials = true                            // cookie情報を必要(true/false)
-    config.AllowHeaders = []string{"Content-Type",}            // アクセスを許可したいHTTPリクエストヘッダ
-
+    config.AllowMethods = []string{"GET","POST",}           // アクセスを許可したいHTTPメソッド
+    config.AllowCredentials = true                          // cookie情報を必要(true/false)
+    config.AllowHeaders = []string{"Content-Type",}         // アクセスを許可したいHTTPリクエストヘッダ
     router.Use(cors.New(config))                            // gin-routerに設定
+
+    // store := cookie.NewStore([]byte("secret"))
+    // router.Use(sessions.Sessions("mysession", store))
 
     // request is GET return hello world
     router.GET("/", func(c *gin.Context){
@@ -138,13 +144,21 @@ func main(){
         fmt.Println(login.Pass)
         fmt.Println(ret)
 
+        // session := sessions.Default(c)
+
         err := mysql_db.Where("email = ? and pass = ?", login.Email, login.Pass,).First(&user).Error
         fmt.Println(user)
+        fmt.Println(user.ID)
+        fmt.Println(reflect.TypeOf(user.ID))
+
         if err != nil {
+            // session.Set("hello", "world")
+            // session.Save()
             c.JSON(200, gin.H{
                 "res_flag":false,
                 "message":"i don't know user",
                 "user":"",
+                // "session":session.Get("hello"),
             })
         } else {
             // c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -155,6 +169,31 @@ func main(){
             // c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
             // c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
             // c.Writer.Header().Set("Content-Type", "application/json")
+            //v := session.Get("count")
+            // session.Set("user_login", strconv.FormatUint(user.ID, 10))
+            // session.Save()
+            // // ローカルの場合
+            // if os.Getenv("ENV") == "local" {
+            //     log.Println("cookieをセットする")
+            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "localhost", true, true)
+            // }
+
+            // // 本番環境の場合
+            // if os.Getenv("ENV") == "production" {
+            //     log.Println("productionでcookieをセットする")
+            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "your_domain", true, true)
+            // }
+
+            // Cookieをセット
+            cookie := new(http.Cookie)
+            cookie.Value = strconv.FormatUint(user.ID, 10) //Cookieに入れる値
+
+            // http.SameSiteNoneModeをNoneにしないと、アクセス元ドメインとアクセス先ドメインが違う場合にcookieがはれない
+            c.SetSameSite(http.SameSiteNoneMode)
+
+            // SetCookie(key, value, 保存期間(秒), パス範囲, 利用許可ドメイン, httpsでcookie利用, httpで利用不可)
+            c.SetCookie("user_login", cookie.Value, 3600, "/", "hello-oi.com", true, true)
+
             c.JSON(200, gin.H{
                 "res_flag":true,
                 "message":"hello world",
