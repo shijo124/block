@@ -24,7 +24,7 @@ function get_test(){
     })
     .then((json) => {
         if(json.res_flag === true ){
-            //location.href = "https://localhost/wallet.html";
+            location.href = "https://dix.front.hello-oi.com/wallet.html";
         }
         else{
             console.log("if = falseです");

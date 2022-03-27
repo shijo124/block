@@ -108,7 +108,7 @@ func main(){
 
 
     config := cors.DefaultConfig()
-    config.AllowOrigins = []string{"https://localhost",}    // アクセスを許可したいアクセス元
+    config.AllowOrigins = []string{"https://localhost","https://dix.front.hello-oi.com",}    // アクセスを許可したいアクセス元
     config.AllowMethods = []string{"GET","POST",}           // アクセスを許可したいHTTPメソッド
     config.AllowCredentials = true                          // cookie情報を必要(true/false)
     config.AllowHeaders = []string{"Content-Type",}         // アクセスを許可したいHTTPリクエストヘッダ
