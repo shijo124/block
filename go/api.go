@@ -206,7 +206,14 @@ func main(){
         fmt.Println("user_wallet!")
 
         var coin Coin
-        fmt.Println(c.Cookie("user_login"))
+        var user_id int64 = c.Cookie("user_login")
+
+        if len(user_id) == 0 {
+            c.JSON(200, gin.H{
+                "res_flag":false,
+                "message":"user not found",
+            })    
+        }
 
         mysql_db.Where("user_id = ?", "1",).First(&coin)
         c.JSON(200, gin.H{
