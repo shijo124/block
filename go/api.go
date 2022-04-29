@@ -202,29 +202,16 @@ func main(){
         }
     })
 
-    router.GET("/user_coin", func(c *gin.Context){
-        fmt.Println("user_coin!")
+    router.GET("/user_wallet", func(c *gin.Context){
+        fmt.Println("user_wallet!")
 
-        var user User
-        var login Login
-        ret := c.Bind(&login)
-        fmt.Println(login)
-        fmt.Println(ret)
+        var coin Coin
+        fmt.Prinln(c.Cookie("useruser_login_"))
 
-        mysql_db.Where("email = ? and pass = ?", "at.shijo@opt-incubate.com", "12345",).First(&user)
-        fmt.Println(user)
-        // c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-        // c.Writer.Header().Set("Access-Control-Max-Age", "86400")
-        // c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET")
-        // c.Writer.Header().Set("Content-Type", "application/json")
-        // c.Writer.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-        // c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
-        // c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-        // c.Writer.Header().Set("Content-Type", "application/json")
+        mysql_db.Where("user_id = ?", "1",).First(&coin)
         c.JSON(200, gin.H{
             "res_flag":true,
-            "message":"hello world",
-            "user":user,
+            "message":" wallet",
         })
     })
 
