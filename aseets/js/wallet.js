@@ -9,7 +9,7 @@ function load_wallet(){
             headers: {
                 "Content-Type": "application/json",
             },
-            method: "GET",
+            method: "POST",
             mode: "cors",
             credentials: "include",
             body: JSON.stringify(body),

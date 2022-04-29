@@ -202,7 +202,7 @@ func main(){
         }
     })
 
-    router.GET("/user_wallet", func(c *gin.Context){
+    router.POST("/user_wallet", func(c *gin.Context){
         fmt.Println("user_wallet!")
 
         var coin Coin
