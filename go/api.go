@@ -206,7 +206,7 @@ func main(){
         fmt.Println("user_wallet!")
 
         var coin Coin
-        fmt.Prinln(c.Cookie("useruser_login_"))
+        fmt.Prinln(c.Cookie("user_login"))
 
         mysql_db.Where("user_id = ?", "1",).First(&coin)
         c.JSON(200, gin.H{
