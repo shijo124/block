@@ -17,7 +17,7 @@ import (
     "gorm.io/gorm"
     "gorm.io/driver/mysql"
     _ "gorm.io/gorm/logger"
-    "errors"
+    _ "errors"
 )
 
 type ComModel struct {
@@ -301,13 +301,21 @@ func main(){
             if ret_user.Error != nil {
                 fmt.Println("ユーザー、見つからず")
             }
+            fmt.Println("---------------first_user-----------------")
+            fmt.Println(first_user)
 
             // RecordNotFound エラーが返却されたかチェックする,これでもデータなしが判別できる
-            coin_err := mysql_db.First(&coin, 1).Error
-            fmt.Println(errors.Is(coin_err, gorm.ErrRecordNotFound))
+            // coin_err := mysql_db.First(&coin, 1).Error
+            // fmt.Println(errors.Is(coin_err, gorm.ErrRecordNotFound))
 
+            var take_coin uint64
             // coin レコード　なし　作成
             ret_query := mysql_db.Where("user_id = ?", uint64_user_id,).First(&coin)
+            fmt.Println("---------------ret_query-----------------")
+            fmt.Println(ret_query)
+            // sql := mysql_db.ToSQL(func(tx *gorm.DB) *gorm.DB {
+            //     return tx.Model(&Coin{}).Where("user_id = ?", uint64_user_id).First(&[]Coin{})
+            // })
             if ret_query.Error != nil {
                 print("でーたなし、だからレコード作成、初期レコードは１０枚プレゼント")
                 insert_coin := Coin{User_id: uint64_user_id, Coin_all: 10}
@@ -315,13 +323,18 @@ func main(){
                 fmt.Println(insert_coin.ID)
                 fmt.Println(result.Error)
                 fmt.Println(result.RowsAffected)
+                take_coin = insert_coin.Coin_all
+            } else {
+                take_coin = coin.Coin_all
             }
 
+            fmt.Println("---------------coin-----------------")
+            fmt.Println(coin)
             c.JSON(http.StatusOK, gin.H{
                 "res_flag": true,
                 "message": "wallet",
                 "user_name": first_user.Name,
-                "have_coin": coin.Coin_all,
+                "have_coin": take_coin,
             })
         }
     })
