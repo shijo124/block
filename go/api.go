@@ -229,6 +229,13 @@ func main(){
                 "message":"user not found",
             })    
         } else {
+            // User情報取得
+            var first_user User
+            mysql_db.Where("id = ?", uint64_user_id,).First(&first_user)
+            if ret_query.Error != nil {
+                fmt.Println("ユーザー、見つからず")
+            }
+
             // RecordNotFound エラーが返却されたかチェックする,これでもデータなしが判別できる
             coin_err := mysql_db.First(&coin, 1).Error
             fmt.Println(errors.Is(coin_err, gorm.ErrRecordNotFound))
@@ -247,6 +254,7 @@ func main(){
             c.JSON(http.StatusOK, gin.H{
                 "res_flag": true,
                 "message": "wallet",
+                "user_name": first_user.Name,
                 "have_coin": 10,
             })
         }
