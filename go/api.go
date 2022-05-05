@@ -233,6 +233,7 @@ func main(){
             coin_err := mysql_db.First(&coin, 1).Error
             fmt.Println(errors.Is(coin_err, gorm.ErrRecordNotFound))
 
+            // coin レコード　なし　作成
             ret_query := mysql_db.Where("user_id = ?", uint64_user_id,).First(&coin)
             if ret_query.Error != nil {
                 print("でーたなし、だからレコード作成、初期レコードは１０枚プレゼント")
@@ -242,16 +243,11 @@ func main(){
                 fmt.Println(result.Error)
                 fmt.Println(result.RowsAffected)
             }
-            /*
-            if coin {
-                fmt.Println("ある")
-            } else {
-                fmt.Println("ない")
-            }
-            */
-            c.JSON(200, gin.H{
-                "res_flag":true,
-                "message":" wallet",
+
+            c.JSON(http.StatusOK, gin.H{
+                "res_flag": true,
+                "message": "wallet",
+                "have_coin": 10,
             })
         }
     })

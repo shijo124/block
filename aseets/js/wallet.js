@@ -22,6 +22,7 @@ function load_wallet(){
         if(json.res_flag === true ){
             console.log("if = Trueです");
             console.log(json.message);
+            console.log(json.have_coin);
         }
         else{
             console.log("if = falseです");
