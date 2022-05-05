@@ -10,15 +10,15 @@
     <body class="h-100 bg-dark text-white">
         <main class="container mt-5">
             <div class="d-flex align-items-center justify-content-center p-5">
+                <h1 class="h3 mb-3 fw-normal">こんにちは。 <span id="user_name"></span></h1>
+
+                <p>あなたが保有しているdixコイン</p>
+                <p class="fs-2 text-center"><span id="have_coin"></span> dix</p>
+
+                <p class="fs-3">dixコインを掘る</p>
+                <button class="w-100 btn btn-lg btn-primary" onclick="wallet_mining();">マイニング</button>
+
                 <form>
-                    <h1 class="h3 mb-3 fw-normal">こんにちは。 <span id="user_name"></span></h1>
-
-                    <p>あなたが保有しているdixコイン</p>
-                    <p class="fs-2 text-center"><span id="have_coin"></span> dix</p>
-
-                    <p class="fs-3">dixコインを掘る</p>
-                    <button class="w-100 btn btn-lg btn-primary" type="submit">マイニング</button>
-
                     <p class="mt-5 fs-3">dixコインを送金する</p>
                     <div class="form-floating">
                         <select class="" name="target_member" id="floatingDixTarget">
