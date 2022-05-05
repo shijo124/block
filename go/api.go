@@ -16,6 +16,7 @@ import (
     "gorm.io/gorm"
     "gorm.io/driver/mysql"
     _ "gorm.io/gorm/logger"
+    "errors"
 )
 
 type ComModel struct {
@@ -34,16 +35,16 @@ type User struct {
 
 type Coin struct {
     ComModel
-    User_id int64
-    Trn_coin_id int64
-    Coin_all int64
+    User_id uint64
+    // Trn_coin_id int64
+    Coin_all uint64
 }
 
 type CoinTrn struct {
     ComModel
-    Send_user_id int64
-    Receive_user_id int64
-    coin int64
+    Send_user_id uint64
+    Receive_user_id uint64
+    Coin_id uint64
 }
 
 // POST 受信用
@@ -206,20 +207,53 @@ func main(){
         fmt.Println("user_wallet!")
 
         var coin Coin
-        var user_id int64 = c.Cookie("user_login")
+        var user_id string
+        //var uint64_user_id uint64
+        user_id, err = c.Cookie("user_login")
+        if err != nil {
+            fmt.Println(err)
+        }
+        // fmt.Printf("%T\n", user_id)
+        // fmt.Println(user_id)
+        // fmt.Println(c.Cookie("user_login"))
+
+        // strconv.ParseUint(文字列, 基数（10進数）,ビット長)
+        uint64_user_id, _ := strconv.ParseUint(user_id, 10, 64)
+        fmt.Println("----------------------")
+        fmt.Printf("%T\n", uint64_user_id)
+        fmt.Println(uint64_user_id)
 
         if len(user_id) == 0 {
             c.JSON(200, gin.H{
                 "res_flag":false,
                 "message":"user not found",
             })    
-        }
+        } else {
+            // RecordNotFound エラーが返却されたかチェックする,これでもデータなしが判別できる
+            coin_err := mysql_db.First(&coin, 1).Error
+            fmt.Println(errors.Is(coin_err, gorm.ErrRecordNotFound))
 
-        mysql_db.Where("user_id = ?", "1",).First(&coin)
-        c.JSON(200, gin.H{
-            "res_flag":true,
-            "message":" wallet",
-        })
+            ret_query := mysql_db.Where("user_id = ?", uint64_user_id,).First(&coin)
+            if ret_query.Error != nil {
+                print("でーたなし、だからレコード作成、初期レコードは１０枚プレゼント")
+                insert_coin := Coin{User_id: uint64_user_id, Coin_all: 10}
+                result := mysql_db.Create(&insert_coin)
+                fmt.Println(insert_coin.ID)
+                fmt.Println(result.Error)
+                fmt.Println(result.RowsAffected)
+            }
+            /*
+            if coin {
+                fmt.Println("ある")
+            } else {
+                fmt.Println("ない")
+            }
+            */
+            c.JSON(200, gin.H{
+                "res_flag":true,
+                "message":" wallet",
+            })
+        }
     })
 
     // run server
