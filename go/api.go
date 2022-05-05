@@ -256,7 +256,7 @@ func main(){
                 "res_flag": true,
                 "message": "wallet",
                 "user_name": first_user.Name,
-                "have_coin": 10,
+                "have_coin": coin.Coin_all,
             })
         }
     })
