@@ -154,7 +154,7 @@ func main(){
         fmt.Println(account.Pass)
         fmt.Println(ret)
 
-        err := mysql_db.Where("email = ? and pass = ?", account.Email, account.Pass,).First(&user).Error
+        err := mysql_db.Where("email = ?", account.Email,).First(&user).Error
         fmt.Println(user)
         fmt.Println(user.ID)
         fmt.Println(reflect.TypeOf(user.ID))
