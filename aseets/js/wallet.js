@@ -23,6 +23,8 @@ function load_wallet(){
             console.log("if = Trueです");
             console.log(json.message);
             console.log(json.have_coin);
+
+            document.getElementById("have_coin").value = json.have_coin;
         }
         else{
             console.log("if = falseです");
