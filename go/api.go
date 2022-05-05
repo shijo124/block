@@ -54,6 +54,13 @@ type Login struct {
     Pass string
 }
 
+// POST アカウント作成
+type Account struct {
+    Name string
+    Email string
+    Pass string
+}
+
 func main(){
     // make router
     router := gin.Default()
@@ -134,6 +141,64 @@ func main(){
             "res_flag":true,
             "message":"hello world",
         })
+    })
+
+    router.POST("/create_account", func(c *gin.Context){
+        fmt.Println("create_account!")
+
+        var user User
+        var account Account
+        ret := c.Bind(&account)
+        fmt.Println(account.Name)
+        fmt.Println(account.Email)
+        fmt.Println(account.Pass)
+        fmt.Println(ret)
+
+        err := mysql_db.Where("email = ? and pass = ?", account.Email, account.Pass,).First(&user).Error
+        fmt.Println(user)
+        fmt.Println(user.ID)
+        fmt.Println(reflect.TypeOf(user.ID))
+
+        if err != nil {
+            // アカウント未登録は作成
+            insert_user := User{Name: account.Name, Email:  account.Email, Pass:  account.Pass}
+            result := mysql_db.Create(&insert_user)
+            fmt.Println(insert_user.ID)
+            fmt.Println(result.Error)
+            fmt.Println(result.RowsAffected)
+        
+            // Cookieをセット
+            cookie := new(http.Cookie)
+            cookie.Value = strconv.FormatUint(insert_user.ID, 10) //Cookieに入れる値
+
+            // http.SameSiteNoneModeをNoneにしないと、アクセス元ドメインとアクセス先ドメインが違う場合にcookieがはれない
+            c.SetSameSite(http.SameSiteNoneMode)
+
+            // SetCookie(key, value, 保存期間(秒), パス範囲, 利用許可ドメイン, httpsでcookie利用, httpで利用不可)
+            c.SetCookie("user_login", cookie.Value, 3600, "/", "hello-oi.com", true, true)
+
+            c.JSON(200, gin.H{
+                "res_flag":true,
+                "message":"OK! create user",
+            })
+        } else {
+            // // ローカルの場合
+            // if os.Getenv("ENV") == "local" {
+            //     log.Println("cookieをセットする")
+            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "localhost", true, true)
+            // }
+
+            // // 本番環境の場合
+            // if os.Getenv("ENV") == "production" {
+            //     log.Println("productionでcookieをセットする")
+            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "your_domain", true, true)
+            // }
+
+            c.JSON(200, gin.H{
+                "res_flag":false,
+                "message":"allready user",
+            })
+        }
     })
 
     router.POST("/login", func(c *gin.Context){
