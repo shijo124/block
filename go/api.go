@@ -9,6 +9,7 @@ import (
     _ "encoding/json"
     "fmt"
     "time"
+    "math/rand" // 乱数
     "strconv"  // キャスト
     "reflect"  // 型確認
     _ "github.com/jinzhu/gorm"    //v1.0
@@ -231,8 +232,8 @@ func main(){
         } else {
             // User情報取得
             var first_user User
-            mysql_db.Where("id = ?", uint64_user_id,).First(&first_user)
-            if ret_query.Error != nil {
+            ret_user := mysql_db.Where("id = ?", uint64_user_id,).First(&first_user)
+            if ret_user.Error != nil {
                 fmt.Println("ユーザー、見つからず")
             }
 
@@ -257,6 +258,63 @@ func main(){
                 "user_name": first_user.Name,
                 "have_coin": 10,
             })
+        }
+    })
+
+    router.POST("/wallet_mining", func(c *gin.Context){
+        fmt.Println("wallet_mining!")
+
+        // 乱数初期化
+        rand.Seed(time.Now().UnixNano())
+
+        // 乱数取得
+        mining_coin := rand.Int()
+
+        var coin Coin
+        var user_id string
+        //var uint64_user_id uint64
+        user_id, err = c.Cookie("user_login")
+        if err != nil {
+            fmt.Println(err)
+        }
+        // fmt.Printf("%T\n", user_id)
+        // fmt.Println(user_id)
+        // fmt.Println(c.Cookie("user_login"))
+
+        // strconv.ParseUint(文字列, 基数（10進数）,ビット長)
+        uint64_user_id, _ := strconv.ParseUint(user_id, 10, 64)
+        fmt.Println("----------------------")
+        fmt.Printf("%T\n", uint64_user_id)
+        fmt.Println(uint64_user_id)
+
+        if len(user_id) == 0 {
+            c.JSON(200, gin.H{
+                "res_flag":false,
+                "message":"user not found",
+            })    
+        } else {
+            // User情報取得
+            var first_user User
+            ret_user := mysql_db.Where("id = ?", uint64_user_id,).First(&first_user)
+            if ret_user.Error != nil {
+                fmt.Println("ユーザー、見つからず")
+            }
+
+            // RecordNotFound エラーが返却されたかチェックする,これでもデータなしが判別できる
+            coin_err := mysql_db.First(&coin, 1).Error
+            fmt.Println(errors.Is(coin_err, gorm.ErrRecordNotFound))
+
+            // coin レコード　確認
+            ret_query := mysql_db.Where("user_id = ?", uint64_user_id,).First(&coin)
+            if ret_query.Error != nil {
+                print("でーたなし、だから異常")
+            } else {
+                c.JSON(http.StatusOK, gin.H{
+                    "res_flag": true,
+                    "message": "wallet",
+                    "have_coin": mining_coin,
+                })
+            }
         }
     })
 
