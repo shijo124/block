@@ -66,6 +66,7 @@ function wallet_mining(){
             console.log(json.have_coin);
 
             document.getElementById("have_coin").textContent = json.have_coin;
+            document.getElementById("mining_button").textContent = message;
         }
         else{
             console.log("if = falseです");

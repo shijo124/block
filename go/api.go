@@ -267,8 +267,9 @@ func main(){
         // 乱数初期化
         rand.Seed(time.Now().UnixNano())
 
-        // 乱数取得
-        mining_coin := rand.Int()
+        // 乱数取得(1-100までの範囲)
+        rand_max := 100
+        mining_coin := rand.Intn(rand_max)
 
         var coin Coin
         var user_id string
@@ -293,26 +294,25 @@ func main(){
                 "message":"user not found",
             })    
         } else {
-            // User情報取得
-            var first_user User
-            ret_user := mysql_db.Where("id = ?", uint64_user_id,).First(&first_user)
-            if ret_user.Error != nil {
-                fmt.Println("ユーザー、見つからず")
-            }
-
-            // RecordNotFound エラーが返却されたかチェックする,これでもデータなしが判別できる
-            coin_err := mysql_db.First(&coin, 1).Error
-            fmt.Println(errors.Is(coin_err, gorm.ErrRecordNotFound))
-
             // coin レコード　確認
             ret_query := mysql_db.Where("user_id = ?", uint64_user_id,).First(&coin)
             if ret_query.Error != nil {
                 print("でーたなし、だから異常")
             } else {
+                // coinレコードをUPDATE、ただし、mining_coinが30以下の場合は更新しない
+                fmt.Println("coin.Coin_all")
+                fmt.Println(coin.Coin_all)
+                var ret_message string = "採掘できませんでした。"
+                if mining_coin >= 30 {
+                    mysql_db.Model(&coin).Select("Coin_all").Updates(Coin{Coin_all: (coin.Coin_all + uint64(mining_coin))})
+                    ret_message = strconv.FormatUint(uint64(mining_coin), 10) + "採掘できました。"
+                    fmt.Println("coin.Coin_all")
+                    fmt.Println(coin.Coin_all)
+                }
                 c.JSON(http.StatusOK, gin.H{
                     "res_flag": true,
-                    "message": "wallet",
-                    "have_coin": mining_coin,
+                    "message": ret_message,
+                    "have_coin": coin.Coin_all,
                 })
             }
         }
