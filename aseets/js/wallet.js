@@ -62,7 +62,6 @@ function wallet_mining(){
         if(json.res_flag === true ){
             console.log("if = Trueです");
             console.log(json.message);
-            console.log(json.user_name);
             console.log(json.have_coin);
 
             document.getElementById("have_coin").textContent = json.have_coin;
