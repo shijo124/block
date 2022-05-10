@@ -9,7 +9,7 @@
     </head>
     <body class="h-100 bg-dark text-white">
         <main class="container mt-5">
-            <div class="align-items-center justify-content-center p-5">
+            <div class="align-items-center justify-content-center p-1">
                 <h1 class="h3 mb-3 fw-normal">こんにちは。 <span id="user_name"></span></h1>
 
                 <div class="d-flex">
@@ -17,11 +17,11 @@
                     <p class="fs-2 text-center"><span id="have_coin"></span> dix</p>
                 </div>
 
-                <form>
+                <form class="form-floating">
                     <p class="mt-5 fs-3">今日の日報</p>
                     <div class="input-group input-group-lg">
-                        <span class="input-group-text" id="inputGroup-sizing-lg">タイトル</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        <input type="text" class="form-control is-invalid" id="floatingInputInvalid" placeholder="" value="">
+                        <label for="floatingInputInvalid">タイトル</label>
                     </div>
                     <div class="input-group input-group-lg">
                         <span class="input-group-text" id="inputGroup-sizing-lg">内容</span>
