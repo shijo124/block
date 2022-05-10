@@ -172,7 +172,7 @@ func main(){
             cookie.Value = strconv.FormatUint(insert_user.ID, 10) //Cookieに入れる値
 
             // http.SameSiteNoneModeをNoneにしないと、アクセス元ドメインとアクセス先ドメインが違う場合にcookieがはれない
-            c.SetSameSite(http.SameSiteNoneMode)
+            // c.SetSameSite(http.SameSiteNoneMode)
 
             // SetCookie(key, value, 保存期間(秒), パス範囲, 利用許可ドメイン, httpsでcookie利用, httpで利用不可)
             c.SetCookie("user_login", cookie.Value, 3600, "/", "hello-oi.com", true, true)
