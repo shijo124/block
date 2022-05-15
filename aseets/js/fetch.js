@@ -1,8 +1,6 @@
 "use strict";
 
 function get_test(){
-    console.log(document.getElementById("email").value);
-    console.log(document.getElementById("pass").value);
     let body = {
         email: document.getElementById("email").value,
         pass: document.getElementById("pass").value,
