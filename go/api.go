@@ -48,6 +48,13 @@ type CoinTrn struct {
     Coin_id uint64
 }
 
+type DailyReportTrn struct {
+    ComModel
+    User_id uint64
+    Date time.Time `sql:"not null;type:date"`
+    Report string
+}
+
 // POST 受信用
 type Login struct {
     Email string
@@ -61,6 +68,13 @@ type Account struct {
     Pass string
 }
 
+// POST 日報
+type DailyReport struct {
+    User_id uint64
+    Date time.Time `json:"not null;type:date"`
+    Report string
+}
+
 func main(){
     // make router
     router := gin.Default()
@@ -72,7 +86,7 @@ func main(){
     if err != nil {
         panic("データベースへの接続に失敗しました")
     }
-    mysql_db.AutoMigrate(&User{},&Coin{},&CoinTrn{},)
+    mysql_db.AutoMigrate(&User{},&Coin{},&CoinTrn{},&DailyReportTrn{},)
 
     db, err := mysql_db.DB()    // gorm v2.0 仕様(バグ？) で、DB()を取得して、deferでClose
     defer db.Close()    // Close
@@ -393,6 +407,43 @@ func main(){
                     "have_coin": coin.Coin_all,
                 })
             }
+        }
+    })
+
+    router.POST("/create_daily_report", func(c *gin.Context){
+        fmt.Println("create_daily_report!")
+
+        var daily_report DailyReport
+        ret := c.Bind(&daily_report)
+        fmt.Println(daily_report.Date)
+        fmt.Println(daily_report.Report)
+        fmt.Println(ret)
+
+        var user_id string
+        //var uint64_user_id uint64
+        user_id, err = c.Cookie("user_login")
+        if err != nil {
+            fmt.Println(err)
+            c.JSON(200, gin.H{
+                "res_flag":false,
+                "message":"user not find",
+            })
+        } else {
+            // strconv.ParseUint(文字列, 基数（10進数）,ビット長)
+            uint64_user_id, _ := strconv.ParseUint(user_id, 10, 64)
+            fmt.Println("----------------------")
+            fmt.Printf("%T\n", uint64_user_id)
+            fmt.Println(uint64_user_id)
+
+            insert_daily_report := DailyReportTrn{User_id: uint64_user_id, Date: daily_report.Date, Report: daily_report.Report}
+            result := mysql_db.Create(&insert_daily_report)
+            fmt.Println(result.Error)
+            fmt.Println(result.RowsAffected)
+
+            c.JSON(200, gin.H{
+                "res_flag":true,
+                "message":"OK! create daily_report",
+            })
         }
     })
 

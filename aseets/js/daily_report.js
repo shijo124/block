@@ -49,15 +49,11 @@ function load_daily_report(){
 
 function input_daily_report(){
     let body = {
-        input_date: document.getElementById("today").value,
-        input_text: document.getElementById("text").value,
+        date: document.getElementById("today").value,
+        report: document.getElementById("text").value,
     };
 
-    console.log(body);
-
-    return false;
-
-    fetch("https://dix.api.hello-oi.com/daily_report_create",
+    fetch("https://dix.api.hello-oi.com/create_daily_report",
         {
             headers: {
                 "Content-Type": "application/json",
