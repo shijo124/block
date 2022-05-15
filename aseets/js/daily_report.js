@@ -28,9 +28,14 @@ function load_daily_report(){
             document.getElementById("user_name").textContent = json.user_name;
             document.getElementById("have_coin").textContent = json.have_coin;
 
+
+            
             let d = new Date();
-            let today = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
-            document.getElementById("have_coin").value = today;
+            let yyyy = d.getFullYear();
+            let mm = ( '00' + (d.getMonth() + 1) ).slice( -2 );
+            let dd = d.getDate();
+            let today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("today").value = today;
         }
         else{
             console.log("if = falseです");
