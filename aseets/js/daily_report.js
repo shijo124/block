@@ -53,6 +53,8 @@ function input_daily_report(){
         report: document.getElementById("text").value,
     };
 
+    console.log(body);
+
     fetch("https://dix.api.hello-oi.com/create_daily_report",
         {
             headers: {
