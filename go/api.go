@@ -18,6 +18,7 @@ import (
     "gorm.io/driver/mysql"
     _ "gorm.io/gorm/logger"
     _ "errors"
+    "strings"
 )
 
 type ComModel struct {
@@ -70,8 +71,7 @@ type Account struct {
 
 // POST 日報
 type DailyReport struct {
-    User_id uint64
-    Date time.Time `json:"not null;type:date"`
+    Date string
     Report string
 }
 
@@ -413,11 +413,11 @@ func main(){
     router.POST("/create_daily_report", func(c *gin.Context){
         fmt.Println("create_daily_report!")
 
-        var daily_report DailyReport
-        ret := c.Bind(&daily_report)
-        fmt.Println(daily_report.Date)
-        fmt.Println(daily_report.Report)
-        fmt.Println(ret)
+        var date_report DailyReport
+        c.Bind(&date_report)
+        // input_date := c.PostForm("date")
+        // input_report := c.PostForm("report")
+        fmt.Println(date_report)
 
         var user_id string
         //var uint64_user_id uint64
@@ -435,7 +435,16 @@ func main(){
             fmt.Printf("%T\n", uint64_user_id)
             fmt.Println(uint64_user_id)
 
-            insert_daily_report := DailyReportTrn{User_id: uint64_user_id, Date: daily_report.Date, Report: daily_report.Report}
+            strTime := strings.Split(date_report.Date, "-")
+            yyyy, _ := strconv.Atoi(strTime[0])
+            mm, _ := strconv.Atoi(strTime[1])
+            dd, _ := strconv.Atoi(strTime[2])
+            fmt.Println(yyyy)
+            fmt.Println(mm)
+            fmt.Println(dd)
+            t := time.Date(yyyy, time.Month(mm), dd, 0, 0, 0, 0, time.Local)
+
+            insert_daily_report := DailyReportTrn{User_id: uint64_user_id, Date: t, Report: date_report.Report}
             result := mysql_db.Create(&insert_daily_report)
             fmt.Println(result.Error)
             fmt.Println(result.RowsAffected)
