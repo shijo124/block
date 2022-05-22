@@ -529,6 +529,7 @@ func main(){
             fmt.Println(dd)
             t := time.Date(yyyy, time.Month(mm), dd, 0, 0, 0, 0, time.Local)
             ret_query2 := mysql_db.Where("user_id = ? and date = ?", uint64_user_id, t,).First(&daily_report)
+            fmt.Println(ret_query2)
             if ret_query2.Error != nil {
                 c.JSON(http.StatusOK, gin.H{
                     "res_flag": true,
