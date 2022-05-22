@@ -116,19 +116,18 @@ func main(){
     */
 
 
-    // 特定ユーザー作成(UserID 1,)
-    var first_user User
-    mysql_db.Where("email = ? and pass = ?", "at.shijo@opt-incubate.com", "12345",).First(&first_user)
-    fmt.Println(first_user)
-    fmt.Println(first_user.Name)
-    if first_user.ID != 1 {
-        insert_user := User{Name: "shijo", Email: "at.shijo@opt-incubate.com", Pass: "12345"}
-        result := mysql_db.Create(&insert_user)
-        fmt.Println(insert_user.ID)
-        fmt.Println(result.Error)
-        fmt.Println(result.RowsAffected)
-    }
-
+    // // 特定ユーザー作成(UserID 1,)
+    // var first_user User
+    // mysql_db.Where("email = ? and pass = ?", "at.shijo@opt-incubate.com", "12345",).First(&first_user)
+    // fmt.Println(first_user)
+    // fmt.Println(first_user.Name)
+    // if first_user.ID != 1 {
+    //     insert_user := User{Name: "shijo", Email: "at.shijo@opt-incubate.com", Pass: "12345"}
+    //     result := mysql_db.Create(&insert_user)
+    //     fmt.Println(insert_user.ID)
+    //     fmt.Println(result.Error)
+    //     fmt.Println(result.RowsAffected)
+    // }
 
     config := cors.DefaultConfig()
     config.AllowOrigins = []string{"https://localhost","https://dix.front.hello-oi.com",}    // アクセスを許可したいアクセス元
@@ -182,14 +181,14 @@ func main(){
             fmt.Println(result.RowsAffected)
         
             // Cookieをセット
-            cookie := new(http.Cookie)
-            cookie.Value = strconv.FormatUint(insert_user.ID, 10) //Cookieに入れる値
+            // cookie := new(http.Cookie)
+            // cookie.Value = strconv.FormatUint(insert_user.ID, 10) //Cookieに入れる値
 
             // http.SameSiteNoneModeをNoneにしないと、アクセス元ドメインとアクセス先ドメインが違う場合にcookieがはれない
             // c.SetSameSite(http.SameSiteNoneMode)
 
             // SetCookie(key, value, 保存期間(秒), パス範囲, 利用許可ドメイン, httpsでcookie利用, httpで利用不可)
-            c.SetCookie("user_login", cookie.Value, 3600, "/", "hello-oi.com", true, true)
+            // c.SetCookie("user_login", cookie.Value, 3600, "/", "hello-oi.com", true, true)
 
             c.JSON(200, gin.H{
                 "res_flag":true,

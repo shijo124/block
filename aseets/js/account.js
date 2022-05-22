@@ -23,7 +23,7 @@ function create_account(){
     })
     .then((json) => {
         if(json.res_flag === true ){
-            location.href = "https://dix.front.hello-oi.com/block/wallet.html";
+            location.href = "https://dix.front.hello-oi.com/block/login.html";
         }
         else{
             console.log("if = falseです");
