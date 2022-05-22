@@ -75,7 +75,10 @@ AGENDA
 ■                            
                         </textarea>
                     </div>
-                    <button class="w-100 btn btn-lg btn-success" onClick="input_daily_report();">報告</button>
+                    <button class="btn btn-primary" type="button" onClick="input_daily_report();" disabled>
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                        <span class="visually-hidden">報告</span>
+                    </button>
                 </div>
             </div>
         </main>
