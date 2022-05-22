@@ -76,6 +76,11 @@ type DailyReport struct {
     Report string
 }
 
+// POST 日報＋mining
+type ReportMining struct {
+    Mining_coin uint64
+}
+
 func main(){
     // make router
     router := gin.Default()
@@ -467,12 +472,19 @@ func main(){
     router.POST("/get_dix_coin_report", func(c *gin.Context){
         fmt.Println("get_dix_coin_report!")
 
-        // 乱数初期化
-        rand.Seed(time.Now().UnixNano())
+        // // 乱数初期化
+        // rand.Seed(time.Now().UnixNano())
 
-        // 乱数取得(1-100までの範囲)
-        rand_max := 100
-        mining_coin := rand.Intn(rand_max)
+        // // 乱数取得(1-100までの範囲)
+        // rand_max := 100
+        // mining_coin := rand.Intn(rand_max)
+
+        var report_mining ReportMining
+        ret := c.Bind(&report_mining)
+        fmt.Println("===============================")
+        fmt.Println(report_mining)
+        fmt.Println("===============================")
+        fmt.Println(ret)
 
         var coin Coin
         var user_id string
@@ -500,9 +512,11 @@ func main(){
                 print("でーたなし、だから異常")
             } else {
                 // coinレコードをUPDATE
+                fmt.Println("report_mining.Mining_coin")
+                fmt.Println(report_mining.Mining_coin)
+                var update_coin uint64 = coin.Coin_all + uint64(report_mining.Mining_coin)
                 fmt.Println("coin.Coin_all")
                 fmt.Println(coin.Coin_all)
-                var update_coin uint64 = coin.Coin_all + uint64(mining_coin)
                 
                 mysql_db.Model(&coin).Select("Coin_all").Updates(Coin{Coin_all: update_coin})
                 ret_message := strconv.FormatUint(uint64(update_coin), 10) + "所有しています"

@@ -119,6 +119,14 @@ function get_dix_coin_report(){
             console.log("if = Trueです");
             console.log(json.message);
 
+            var report_end_modal = new bootstrap.Modal(document.getElementById('report_end_modal'), {
+                keyboard: false
+            })
+
+            document.getElementById("get_coin").textContent = 0;
+
+            report_end_modal.hide()
+
             location.href = "https://dix.front.hello-oi.com/block/wallet.html";
         }
         else{
