@@ -1,5 +1,9 @@
 "use strict";
 
+let report_end_modal = new bootstrap.Modal(document.getElementById('report_end_modal'), {
+    keyboard: false
+})
+
 function load_daily_report(){
     let body = {
     };
@@ -75,10 +79,6 @@ function input_daily_report(){
             console.log("if = Trueです");
             console.log(json.message);
 
-            var report_end_modal = new bootstrap.Modal(document.getElementById('report_end_modal'), {
-                keyboard: false
-            })
-
             document.getElementById("get_coin").textContent = json.mining_coin;
 
             report_end_modal.show()
@@ -118,10 +118,6 @@ function get_dix_coin_report(){
         if(json.res_flag === true ){
             console.log("if = Trueです");
             console.log(json.message);
-
-            var report_end_modal = new bootstrap.Modal(document.getElementById('report_end_modal'), {
-                keyboard: false
-            })
 
             document.getElementById("get_coin").textContent = 0;
 
