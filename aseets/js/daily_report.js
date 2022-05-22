@@ -73,18 +73,12 @@ function input_daily_report(){
         if(json.res_flag === true ){
             console.log("if = Trueです");
             console.log(json.message);
-            console.log(json.user_name);
-            console.log(json.have_coin);
 
-            document.getElementById("user_name").textContent = json.user_name;
-            document.getElementById("have_coin").textContent = json.have_coin;
+            var report_end_modal = new bootstrap.Modal(document.getElementById('report_end_modal'), {
+                keyboard: false
+            })
 
-            let d = new Date();
-            let yyyy = d.getFullYear();
-            let mm = ( '00' + (d.getMonth() + 1) ).slice( -2 );
-            let dd = d.getDate();
-            let today = yyyy + '-' + mm + '-' + dd;
-            document.getElementById("today").value = today;
+            report_end_modal.show()
         }
         else{
             console.log("if = falseです");
