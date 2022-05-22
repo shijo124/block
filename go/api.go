@@ -47,6 +47,7 @@ type CoinTrn struct {
     Send_user_id uint64
     Receive_user_id uint64
     Coin_id uint64
+    Is_coin uint64
 }
 
 type DailyReportTrn struct {
@@ -412,6 +413,13 @@ func main(){
     router.POST("/create_daily_report", func(c *gin.Context){
         fmt.Println("create_daily_report!")
 
+        // 乱数初期化
+        rand.Seed(time.Now().UnixNano())
+
+        // 乱数取得(1-100までの範囲)
+        rand_max := 100
+        mining_coin := rand.Intn(rand_max)
+
         var date_report DailyReport
         c.Bind(&date_report)
         // input_date := c.PostForm("date")
@@ -451,7 +459,62 @@ func main(){
             c.JSON(200, gin.H{
                 "res_flag":true,
                 "message":"OK! create daily_report",
+                "mining_coin":mining_coin,
             })
+        }
+    })
+
+    router.POST("/get_dix_coin_report", func(c *gin.Context){
+        fmt.Println("get_dix_coin_report!")
+
+        // 乱数初期化
+        rand.Seed(time.Now().UnixNano())
+
+        // 乱数取得(1-100までの範囲)
+        rand_max := 100
+        mining_coin := rand.Intn(rand_max)
+
+        var coin Coin
+        var user_id string
+        //var uint64_user_id uint64
+        user_id, err = c.Cookie("user_login")
+        if err != nil {
+            fmt.Println(err)
+        }
+
+        // strconv.ParseUint(文字列, 基数（10進数）,ビット長)
+        uint64_user_id, _ := strconv.ParseUint(user_id, 10, 64)
+        fmt.Println("----------------------")
+        fmt.Printf("%T\n", uint64_user_id)
+        fmt.Println(uint64_user_id)
+
+        if len(user_id) == 0 {
+            c.JSON(200, gin.H{
+                "res_flag":false,
+                "message":"user not found",
+            })    
+        } else {
+            // coin レコード　確認
+            ret_query := mysql_db.Where("user_id = ?", uint64_user_id,).First(&coin)
+            if ret_query.Error != nil {
+                print("でーたなし、だから異常")
+            } else {
+                // coinレコードをUPDATE
+                fmt.Println("coin.Coin_all")
+                fmt.Println(coin.Coin_all)
+                var update_coin uint64 = coin.Coin_all + uint64(mining_coin)
+                
+                mysql_db.Model(&coin).Select("Coin_all").Updates(Coin{Coin_all: update_coin})
+                ret_message := strconv.FormatUint(uint64(update_coin), 10) + "所有しています"
+                fmt.Println("coin.Coin_all")
+                fmt.Println(coin.Coin_all)
+
+                c.JSON(http.StatusOK, gin.H{
+                    "res_flag": true,
+                    "message": ret_message,
+                    "have_coin": coin.Coin_all,
+                })
+            }
         }
     })
 

@@ -78,7 +78,7 @@ function input_daily_report(){
                 keyboard: false
             })
 
-            document.getElementById("get_coin").textContent = 0.2;
+            document.getElementById("get_coin").textContent = json.mining_coin;
 
             report_end_modal.show()
         }
