@@ -127,7 +127,7 @@ function get_dix_coin_report(){
 
             report_end_modal.hide();
 
-            setTimeout('location.href = "https://dix.front.hello-oi.com/block/wallet.html"',1000);
+            // setTimeout('location.href = "https://dix.front.hello-oi.com/block/wallet.html"',1000);
         }
         else{
             console.log("if = falseです");
