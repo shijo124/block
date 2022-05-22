@@ -78,6 +78,8 @@ function input_daily_report(){
                 keyboard: false
             })
 
+            document.getElementById("get_coin").textContent = 0.2;
+
             report_end_modal.show()
         }
         else{
