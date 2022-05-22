@@ -94,3 +94,40 @@ function input_daily_report(){
     });
 }
 
+function get_dix_coin_report(){
+    let body = {
+    };
+
+    fetch("https://dix.api.hello-oi.com/get_dix_coin_report",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            body: JSON.stringify(body),
+        }
+    )
+    .then((res) => {
+        return res.json();
+    })
+    .then((json) => {
+        if(json.res_flag === true ){
+            console.log("if = Trueです");
+            console.log(json.message);
+
+            location.href = "https://dix.front.hello-oi.com/block/wallet.html";
+        }
+        else{
+            console.log("if = falseです");
+            console.log(json.res_flag);
+            console.log(json.message);
+            console.log(json.user.Id);
+            console.log(json.user.Name);
+            console.log(json.user.Email);
+            console.log(json.user.Pass);
+        }
+    });
+}
+

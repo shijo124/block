@@ -188,7 +188,7 @@ func main(){
             // c.SetSameSite(http.SameSiteNoneMode)
 
             // SetCookie(key, value, 保存期間(秒), パス範囲, 利用許可ドメイン, httpsでcookie利用, httpで利用不可)
-            // c.SetCookie("user_login", cookie.Value, 3600, "/", "hello-oi.com", true, true)
+            // c.SetCookie("user_login", cookie.Value, 604800, "/", "hello-oi.com", true, true)
 
             c.JSON(200, gin.H{
                 "res_flag":true,
@@ -198,13 +198,13 @@ func main(){
             // // ローカルの場合
             // if os.Getenv("ENV") == "local" {
             //     log.Println("cookieをセットする")
-            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "localhost", true, true)
+            //     c.SetCookie("jwt", cookie.Value, 604800, "/", "localhost", true, true)
             // }
 
             // // 本番環境の場合
             // if os.Getenv("ENV") == "production" {
             //     log.Println("productionでcookieをセットする")
-            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "your_domain", true, true)
+            //     c.SetCookie("jwt", cookie.Value, 604800, "/", "your_domain", true, true)
             // }
 
             c.JSON(200, gin.H{
@@ -255,13 +255,13 @@ func main(){
             // // ローカルの場合
             // if os.Getenv("ENV") == "local" {
             //     log.Println("cookieをセットする")
-            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "localhost", true, true)
+            //     c.SetCookie("jwt", cookie.Value, 604800, "/", "localhost", true, true)
             // }
 
             // // 本番環境の場合
             // if os.Getenv("ENV") == "production" {
             //     log.Println("productionでcookieをセットする")
-            //     c.SetCookie("jwt", cookie.Value, 3600, "/", "your_domain", true, true)
+            //     c.SetCookie("jwt", cookie.Value, 604800, "/", "your_domain", true, true)
             // }
 
             // Cookieをセット
@@ -272,7 +272,7 @@ func main(){
             c.SetSameSite(http.SameSiteNoneMode)
 
             // SetCookie(key, value, 保存期間(秒), パス範囲, 利用許可ドメイン, httpsでcookie利用, httpで利用不可)
-            c.SetCookie("user_login", cookie.Value, 3600, "/", "hello-oi.com", true, true)
+            c.SetCookie("user_login", cookie.Value, 604800, "/", "hello-oi.com", true, true)
 
             c.JSON(200, gin.H{
                 "res_flag":true,
