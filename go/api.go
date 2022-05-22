@@ -78,6 +78,7 @@ type DailyReport struct {
 
 // POST 日報＋mining
 type ReportMining struct {
+    Date string
     Mining_coin uint64
 }
 
@@ -487,6 +488,7 @@ func main(){
         fmt.Println(ret)
 
         var coin Coin
+        var daily_report DailyReportTrn
         var user_id string
         //var uint64_user_id uint64
         user_id, err = c.Cookie("user_login")
@@ -509,26 +511,51 @@ func main(){
             // coin レコード　確認
             ret_query := mysql_db.Where("user_id = ?", uint64_user_id,).First(&coin)
             if ret_query.Error != nil {
-                print("でーたなし、だから異常")
-            } else {
-                // coinレコードをUPDATE
-                fmt.Println("report_mining.Mining_coin")
-                fmt.Println(report_mining.Mining_coin)
-                var update_coin uint64 = coin.Coin_all + uint64(report_mining.Mining_coin)
-                fmt.Println("coin.Coin_all")
-                fmt.Println(coin.Coin_all)
-                
-                mysql_db.Model(&coin).Select("Coin_all").Updates(Coin{Coin_all: update_coin})
-                ret_message := strconv.FormatUint(uint64(update_coin), 10) + "所有しています"
-                fmt.Println("coin.Coin_all")
-                fmt.Println(coin.Coin_all)
-
                 c.JSON(http.StatusOK, gin.H{
                     "res_flag": true,
-                    "message": ret_message,
+                    "message": "coins レコード なし 異常",
                     "have_coin": coin.Coin_all,
                 })
+                return
             }
+            
+            // daily_report レコード　確認　対象日のレコードが存在していたらdix_coinを付与しない
+            strTime := strings.Split(report_mining.Date, "-")
+            yyyy, _ := strconv.Atoi(strTime[0])
+            mm, _ := strconv.Atoi(strTime[1])
+            dd, _ := strconv.Atoi(strTime[2])
+            fmt.Println(yyyy)
+            fmt.Println(mm)
+            fmt.Println(dd)
+            t := time.Date(yyyy, time.Month(mm), dd, 0, 0, 0, 0, time.Local)
+            ret_query2 := mysql_db.Where("user_id = ? and date = ?", uint64_user_id, t,).First(&daily_report)
+            if ret_query2.Error != nil {
+                c.JSON(http.StatusOK, gin.H{
+                    "res_flag": true,
+                    "message": "既に登録済",
+                    "have_coin": coin.Coin_all,
+                })
+                return
+            }
+            
+            // coinレコードをUPDATE
+            fmt.Println("report_mining.Mining_coin")
+            fmt.Println(report_mining.Mining_coin)
+            var update_coin uint64 = coin.Coin_all + uint64(report_mining.Mining_coin)
+            fmt.Println("coin.Coin_all")
+            fmt.Println(coin.Coin_all)
+            
+            mysql_db.Model(&coin).Select("Coin_all").Updates(Coin{Coin_all: update_coin})
+            ret_message := strconv.FormatUint(uint64(update_coin), 10) + "所有しています"
+            fmt.Println("coin.Coin_all")
+            fmt.Println(coin.Coin_all)
+
+            c.JSON(http.StatusOK, gin.H{
+                "res_flag": true,
+                "message": ret_message,
+                "have_coin": coin.Coin_all,
+            })
+            return
         }
     })
 

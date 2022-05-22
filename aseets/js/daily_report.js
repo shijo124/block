@@ -97,6 +97,7 @@ function input_daily_report(){
 
 function get_dix_coin_report(){
     let body = {
+        date: document.getElementById("today").value,
         mining_coin: Number(document.getElementById("get_coin").textContent),
     };
 
