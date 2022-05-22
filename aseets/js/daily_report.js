@@ -70,6 +70,7 @@ function input_daily_report(){
         return res.json();
     })
     .then((json) => {
+        console.log(json);
         if(json.res_flag === true ){
             console.log("if = Trueです");
             console.log(json.message);
