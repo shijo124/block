@@ -97,6 +97,7 @@ function input_daily_report(){
 
 function get_dix_coin_report(){
     let body = {
+        mining_coin: Number(document.getElementById("get_coin").textContent),
     };
 
     fetch("https://dix.api.hello-oi.com/get_dix_coin_report",
